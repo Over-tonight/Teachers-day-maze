@@ -57,25 +57,61 @@
             font-size: 25px;
         }
 
-        #message {
-            font-size: 24px;
+        /* The secret letter/number screen */
+        #cluePage {
+            display: none;
+            height: 100vh;
+
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        #cluePage h1 {
+            font-size: 40px;
+        }
+
+        #secret {
+            font-size: 180px;
             font-weight: bold;
-            margin-top: 20px;
+            margin: 30px;
+        }
+
+        #cluePage p {
+            font-size: 25px;
         }
     </style>
 </head>
 
 <body>
 
-    <h1>🎓 THE TEACHER'S MAZE</h1>
+    <!-- MAZE SCREEN -->
 
-    <div id="info">
-        Use the arrow keys or WASD to escape!
+    <div id="mazePage">
+
+        <h1>🎓 THE TEACHER'S MAZE</h1>
+
+        <div id="info">
+            Use the arrow keys or WASD to escape!
+        </div>
+
+        <div id="maze"></div>
+
     </div>
 
-    <div id="maze"></div>
 
-    <div id="message"></div>
+    <!-- SECRET LETTER/NUMBER SCREEN -->
+
+    <div id="cluePage">
+
+        <h1>🎉 MAZE COMPLETE!</h1>
+
+        <div id="secret">A</div>
+
+        <p>Remember this letter!</p>
+
+    </div>
+
 
     <script>
 
@@ -134,6 +170,7 @@
             }
         }
 
+
         function movePlayer(rowChange, colChange) {
 
             const newRow = playerRow + rowChange;
@@ -148,6 +185,7 @@
                 return;
             }
 
+            // Don't allow player to walk through walls
             if (maze[newRow][newCol] === "#") {
                 return;
             }
@@ -157,13 +195,17 @@
 
             drawMaze();
 
+
+            // Player reached the exit
             if (maze[playerRow][playerCol] === "E") {
 
-                document.getElementById("message").innerHTML =
-                    "🎉 MAZE COMPLETE! Your next clue awaits!";
+                document.getElementById("mazePage").style.display = "none";
+
+                document.getElementById("cluePage").style.display = "flex";
 
             }
         }
+
 
         document.addEventListener("keydown", function(event) {
 
@@ -184,6 +226,7 @@
             }
 
         });
+
 
         drawMaze();
 
