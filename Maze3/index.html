@@ -22,8 +22,8 @@
         #maze {
             display: grid;
             margin: 20px auto;
-            width: 630px;
-            height: 630px;
+            width: 750px;
+            height: 690px;
             grid-template-columns: repeat(25, 1fr);
             grid-template-rows: repeat(23, 1fr);
             border: 5px solid white;
@@ -39,14 +39,14 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 22px;
+            font-size: 20px;
         }
         .exit {
             background: #22c55e;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 22px;
+            font-size: 20px;
         }
         #cluePage {
             display: none;
@@ -69,7 +69,6 @@
     </style>
 </head>
 <body>
-    <!-- MAZE SCREEN -->
     <div id="mazePage">
         <h1>🎓 THE TEACHER'S MAZE</h1>
         <div id="info">
@@ -78,7 +77,6 @@
         <div id="maze"></div>
     </div>
 
-    <!-- SECRET LETTER/NUMBER SCREEN -->
     <div id="cluePage">
         <h1>🎉 MAZE COMPLETE!</h1>
         <div id="secret">A</div>
@@ -86,29 +84,31 @@
     </div>
 
     <script>
-const maze = [
-  "#####################",
-  "#P        #         #",
-  "####### # # ####### #",
-  "#     # # # #     # #",
-  "# ### # # # # ### # #",
-  "# #   # #   # #   # #",
-  "# # ### ##### # ### #",
-  "# #             #   #",
-  "# ############# ### #",
-  "#               #   #",
-  "##### ######### # ###",
-  "#     #       # #   #",
-  "# ### # ##### # ### #",
-  "# #   #     # #   # #",
-  "# # ####### # ### # #",
-  "# #         #     # #",
-  "# ########### ### # #",
-  "#             #   # #",
-  "############### # # #",
-  "#                 #E#",
-  "#####################"
-];
+        const maze = [
+          "#########################",
+          "#P    #                 #",
+          "### # # ############### #",
+          "#   # #               # #",
+          "# ### ######### ##### # #",
+          "# #           #     # # #",
+          "# # ######### # ### # # #",
+          "# # #       # # #   # # #",
+          "# # # ##### # # # ### # #",
+          "#   # #   # # # #     # #",
+          "##### # # # # # ####### #",
+          "#     # # # # #         #",
+          "# ##### # # # ######### #",
+          "# #     # # #         # #",
+          "# # ##### # ######### # #",
+          "# #     # #         # # #",
+          "# ##### # ######### # # #",
+          "#       #           # # #",
+          "######### ########### # #",
+          "#                     # #",
+          "# ################### # #",
+          "#                   #  E#",
+          "#########################"
+        ];
 
         const mazeElement = document.getElementById("maze");
         let playerRow = 1;
