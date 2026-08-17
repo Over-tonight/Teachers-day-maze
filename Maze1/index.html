@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,13 +24,16 @@
             margin: 15px;
         }
 
+        /* 51 × 51 maze */
         #maze {
             display: grid;
             margin: 20px auto;
-            width: 600px;
-            height: 600px;
-            grid-template-columns: repeat(29, 1fr);
-            grid-template-rows: repeat(25, 1fr);
+            width: 510px;
+            height: 510px;
+
+            grid-template-columns: repeat(51, 1fr);
+            grid-template-rows: repeat(51, 1fr);
+
             border: 5px solid white;
         }
 
@@ -46,7 +50,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 25px;
+            font-size: 10px;
         }
 
         .exit {
@@ -54,10 +58,11 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 25px;
+            font-size: 10px;
         }
 
-        /* The secret letter/number screen */
+        /* Secret letter/number screen */
+
         #cluePage {
             display: none;
             height: 100vh;
@@ -79,6 +84,14 @@
 
         #cluePage p {
             font-size: 25px;
+        }
+
+        /* Make the maze fit smaller screens */
+        @media (max-width: 600px) {
+            #maze {
+                width: 90vw;
+                height: 90vw;
+            }
         }
     </style>
 </head>
@@ -115,37 +128,85 @@
 
     <script>
 
-const maze = [
-  "#############################",
-  "#P      #           #       #",
-  "##### # # ######### # ##### #",
-  "#   # # #         # #     # #",
-  "# # # # ######### # ##### # #",
-  "# # # #         # #     # # #",
-  "# # # ######### # ##### # # #",
-  "# # #         # #     # # # #",
-  "# # ######### # ##### # # # #",
-  "# #         # #     # # # # #",
-  "# ######### # ##### # # # # #",
-  "#         # #     # # # # # #",
-  "######### # ##### # # # # # #",
-  "#       # #     # # # # # # #",
-  "# ##### # ##### # # # # # # #",
-  "# #   # #     # # # # # # # #",
-  "# # # # ##### # # # # # # # #",
-  "# # # #     # # # # # # # # #",
-  "# # # ##### # # # # # # # # #",
-  "# # #     # # # # # # # # # #",
-  "# # ##### # # # # # # # # # #",
-  "# #     # # # # # # # #   # #",
-  "# ##### # # # # # # ##### # #",
-  "#       #   #   #       #  E#",
-  "#############################"
-];
+        /*
+         * MAZE DIMENSIONS:
+         * 51 columns × 51 rows
+         *
+         * # = wall
+         * space = path
+         * P = player start
+         * E = exit
+         */
+
+        const maze = [
+
+            "  #################################################",
+            "#P#   #           #       #                       #",
+            "#     # ########  # ####  # ####################  #",
+            "#   # # #         # #     # #                     #",
+            "##### # # ######### # ##### #  ##########  ########",
+            "#     # # #   #   # # # # # #           #         #",
+            "#  #### # #   #   # # # # # #  ####################",
+            "#       # # # # # # # # # # #                     #",
+            "#########   #   # # # # # # ##################### #",
+            "#           #   # # # # # # #                   # #",
+            "#################   #   # # # ################# # #",
+            "#         #         #   # # # #               # # #",
+            "#  ###### ###########  ## # # # ############  # # #",
+            "#       #                 # # # #             # # #",
+            "######  ################### # #  ############ # #",
+            "#               #           # # #         #   # # #",
+            "##############  # ######  ### # #  ########   # # #",
+            "#               # #       #   # #           # # #",
+            "#  ############## #########  ## ############# #   #",
+            "#                 #             #             #   #",
+            "################################# #################",
+            "#                         # #   # #               #",
+            "# ####################### # #   # # ############  #",
+            "# #                     # # # # # # #             #",
+            "# # ##################  # # # # # # #  ########## #",
+            "# # #                   # # # # # # #           # #",
+            "# # # ################  #     # # # #  ########## #",
+            "# # # #           #     #     # # # #           # #",
+            "# # # # ########  # ########### # # ##########  #",
+            "# # # # #         # #           # # #           # #",
+            "# # # # #  ######## #  ########## # # ###########",
+            "# # # # #         # #             # # #         # #",
+            "#   # # # ######################### #   ######  # #",
+            "#   # # # #                         #   #       # #",
+            "##### # # # #############################  ########",
+            "#     # # # #                                     #",
+            "#  #### # # # #####################################",
+            "#       # # # # # #               #               #",
+            "######### # # # # # ############# #  ###########  #",
+            "#         # # # # # #           # #   #           #",
+            "#  ######## # # # # # ######### # ### #  ##########",
+            "#         # # # # # # #       # # # # #           #",
+            "#  ######## # # # # # #  #### # # # # # ###########",
+            "#           # # # # # #     # # # # # # #         #",
+            "############# # # # # ##### # # # # # # # ######  #",
+            "#             # # # #     # # # # # # # # #       #",
+            "#  ############ # # ####  # # # # # # # # # #######",
+            "#         #   # # #       # # # # # # # # # #     #",
+            "#  ########     # ######### #   #     #   #    ####",
+            "#           #   #           #   #     #   #      E#",
+            "#################################################  "
+
+        ];
+
+
         const mazeElement = document.getElementById("maze");
+
+
+        /* Starting position */
 
         let playerRow = 1;
         let playerCol = 1;
+
+
+        /*
+         * Draw the maze
+         */
 
         function drawMaze() {
 
@@ -157,33 +218,65 @@ const maze = [
 
                     const cell = document.createElement("div");
 
+                    /*
+                     * Walls are #
+                     * Everything else is a path
+                     */
+
                     if (maze[row][col] === "#") {
                         cell.classList.add("wall");
-                    } 
+                    }
                     else {
                         cell.classList.add("path");
                     }
 
+
+                    /*
+                     * Player
+                     */
+
                     if (row === playerRow && col === playerCol) {
+
                         cell.classList.add("player");
                         cell.innerHTML = "🧑‍🏫";
+
                     }
+
+
+                    /*
+                     * Exit
+                     */
 
                     if (maze[row][col] === "E") {
+
                         cell.classList.add("exit");
                         cell.innerHTML = "🚪";
+
                     }
 
+
                     mazeElement.appendChild(cell);
+
                 }
+
             }
+
         }
 
+
+        /*
+         * Move player
+         */
 
         function movePlayer(rowChange, colChange) {
 
             const newRow = playerRow + rowChange;
             const newCol = playerCol + colChange;
+
+
+            /*
+             * Prevent going outside maze
+             */
 
             if (
                 newRow < 0 ||
@@ -194,10 +287,19 @@ const maze = [
                 return;
             }
 
-            // Don't allow player to walk through walls
+
+            /*
+             * Prevent walking through walls
+             */
+
             if (maze[newRow][newCol] === "#") {
                 return;
             }
+
+
+            /*
+             * Move player
+             */
 
             playerRow = newRow;
             playerCol = newCol;
@@ -205,7 +307,10 @@ const maze = [
             drawMaze();
 
 
-            // Player reached the exit
+            /*
+             * Player reached exit
+             */
+
             if (maze[playerRow][playerCol] === "E") {
 
                 document.getElementById("mazePage").style.display = "none";
@@ -213,29 +318,57 @@ const maze = [
                 document.getElementById("cluePage").style.display = "flex";
 
             }
+
         }
 
 
+        /*
+         * Keyboard controls
+         */
+
         document.addEventListener("keydown", function(event) {
 
-            if (event.key === "ArrowUp" || event.key.toLowerCase() === "w") {
+            if (
+                event.key === "ArrowUp" ||
+                event.key.toLowerCase() === "w"
+            ) {
+                event.preventDefault();
                 movePlayer(-1, 0);
             }
 
-            if (event.key === "ArrowDown" || event.key.toLowerCase() === "s") {
+
+            if (
+                event.key === "ArrowDown" ||
+                event.key.toLowerCase() === "s"
+            ) {
+                event.preventDefault();
                 movePlayer(1, 0);
             }
 
-            if (event.key === "ArrowLeft" || event.key.toLowerCase() === "a") {
+
+            if (
+                event.key === "ArrowLeft" ||
+                event.key.toLowerCase() === "a"
+            ) {
+                event.preventDefault();
                 movePlayer(0, -1);
             }
 
-            if (event.key === "ArrowRight" || event.key.toLowerCase() === "d") {
+
+            if (
+                event.key === "ArrowRight" ||
+                event.key.toLowerCase() === "d"
+            ) {
+                event.preventDefault();
                 movePlayer(0, 1);
             }
 
         });
 
+
+        /*
+         * Draw maze when page loads
+         */
 
         drawMaze();
 
@@ -243,3 +376,4 @@ const maze = [
 
 </body>
 </html>
+```
