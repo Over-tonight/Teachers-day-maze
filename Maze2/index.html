@@ -1,9 +1,11 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teacher's Day Maze</title>
+
     <style>
         body {
             margin: 0;
@@ -12,134 +14,267 @@
             font-family: Arial, sans-serif;
             text-align: center;
         }
+
         h1 {
             margin-top: 25px;
         }
+
         #info {
             font-size: 20px;
             margin: 15px;
         }
+
+        /* 51 × 51 maze */
         #maze {
             display: grid;
             margin: 20px auto;
-            width: 630px;
-            height: 630px;
-            grid-template-columns: repeat(21, 1fr);
-            grid-template-rows: repeat(21, 1fr);
+            width: 510px;
+            height: 510px;
+
+            grid-template-columns: repeat(51, 1fr);
+            grid-template-rows: repeat(51, 1fr);
+
             border: 5px solid white;
         }
+
         .wall {
             background: #374151;
         }
+
         .path {
             background: #f3f4f6;
         }
+
         .player {
             background: #3b82f6;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 22px;
+            font-size: 10px;
         }
+
         .exit {
             background: #22c55e;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 22px;
+            font-size: 10px;
         }
+
+        /* Secret letter/number screen */
+
         #cluePage {
             display: none;
             height: 100vh;
+
             align-items: center;
             justify-content: center;
             flex-direction: column;
         }
+
         #cluePage h1 {
             font-size: 40px;
         }
+
         #secret {
             font-size: 180px;
             font-weight: bold;
             margin: 30px;
         }
+
         #cluePage p {
             font-size: 25px;
         }
+
+        /* Make the maze fit smaller screens */
+        @media (max-width: 600px) {
+            #maze {
+                width: 90vw;
+                height: 90vw;
+            }
+        }
     </style>
 </head>
+
 <body>
+
     <!-- MAZE SCREEN -->
+
     <div id="mazePage">
+
         <h1>🎓 THE TEACHER'S MAZE</h1>
+
         <div id="info">
             Use the arrow keys or WASD to escape!
         </div>
+
         <div id="maze"></div>
+
     </div>
+
 
     <!-- SECRET LETTER/NUMBER SCREEN -->
+
     <div id="cluePage">
+
         <h1>🎉 MAZE COMPLETE!</h1>
-        <div id="secret">0</div>
+
+        <div id="secret">A</div>
+
         <p>Remember this letter!</p>
+
     </div>
 
+
     <script>
-        const maze = [
-          "#####################",
-          "#P        #         #",
-          "####### # # ####### #",
-          "#     # # # #     # #",
-          "# ### # # # # ### # #",
-          "# #   # #   # #   # #",
-          "# # ### ##### # ### #",
-          "# #             #   #",
-          "# ############# ### #",
-          "#               #   #",
-          "##### ######### # ###",
-          "#     #       # #   #",
-          "# ### # ##### # ### #",
-          "# #   #     # #   # #",
-          "# # ####### # ### # #",
-          "# #         #     # #",
-          "# ########### ### # #",
-          "#             #   # #",
-          "############### # # #",
-          "#                 #E#",
-          "#####################"
-        ];
+
+        /*
+         * MAZE DIMENSIONS:
+         * 51 columns × 51 rows
+         *
+         * # = wall
+         * space = path
+         * P = player start
+         * E = exit
+         */
+
+const maze = [
+"###################################################",
+"#P  #     #         #     #         #     #       #",
+"### ### # # # ##### ##### # ##### # # # ### # ### #",
+"# #     # # # #   #     #   #   # # # #     # #   #",
+"# ####### ### # # ##### # ##### # # ### ##### #####",
+"#       # #   # #   #   #     # # #   # #     #   #",
+"# ### ### # ### # # # ####### # # ### ### ##### # #",
+"# # # #   # #   # # # #       # # # #   #     # # #",
+"# # # # ### ### # ### # ####### # # ### # ### # # #",
+"#   #   #     # #   # #     #   # #   # # # #   # #",
+"### ##### ### # ### # ##### ### # # # # # # ##### #",
+"# # #   # #   #   # # #   #   # # # #   # #     # #",
+"# # # # ### ##### # # ### ### # # # ##### ### ### #",
+"# #   #   # #   # #   #   #     # # #         #   #",
+"# ####### # # # # ##### ### ##### # ######### # # #",
+"#       #   # # # #       # # #   # #   #     # # #",
+"# # # ####### # # ####### # # # ### # # ### ### # #",
+"# # # #       #   #       #   # #   # #   #   # # #",
+"# # ### ########### ##### # ### # ### ### ##### ###",
+"# # #   #   #     #   #   # #   # #   # #     #   #",
+"### # ### # # # # ### # ### # ### # ### ##### ### #",
+"#   #     # # # # #   #   # # #     #       #     #",
+"# ######### ### # # ####### # ####### ### # ##### #",
+"#         #     # # #   #   # #   # # #   # #     #",
+"### # ########### # # # # ### # # # # # ##### #####",
+"#   # #     #     #   #   #   # # # # #   #   #   #",
+"# ##### # # # ##### ####### ### # # # ### # ### ###",
+"#       # # # #   # #     #     # #   # #   #     #",
+"# ####### ### # ### # ### ####### ### # ##### ### #",
+"# #     #     #     #   #   #   #   #       #   # #",
+"# ### # ####### ####### ### # ##### ####### ##### #",
+"#     # #               #     #   # #     #     # #",
+"####### ##### ####### ######### # # # ### ##### # #",
+"#     #     #   #   # #   #   # #   # #   #       #",
+"# # # ##### # ### # ### # # # # ##### # ###########",
+"# # # # #   # #   #   #   #   #     #           #",
+"### # # # ##### ### # ########### ############### #",
+"#   #   #       # # # #             #           # #",
+"# ############### # # # ########### # # # ####### #",
+"#     #     #     # # #     #   # # # # # #       #",
+"# ### # # # # ### # # ##### # # # # ### ### ##### #",
+"#   # # # #   #   # #       # # #       #   #     #",
+"### # # ######### # # ####### # # ####### ### #####",
+"#   #   #         # # # #     # # #     # # #     #",
+"# ############### # # # # ##### # # ### # # ##### #",
+"#       #       # # #   # #     # #   # # #   #   #",
+"####### # ### ### # # ### # ####### # # # # # # ###",
+"#     # #   # #   # # #   #       # # #   # #   # #",
+"# # ### ### # # ### ### ######### ### ##### ##### #",
+"# #         # #         #             #          E#",
+"###################################################"
+];
+
 
         const mazeElement = document.getElementById("maze");
+
+
+        /* Starting position */
+
         let playerRow = 1;
         let playerCol = 1;
 
+
+        /*
+         * Draw the maze
+         */
+
         function drawMaze() {
+
             mazeElement.innerHTML = "";
+
             for (let row = 0; row < maze.length; row++) {
+
                 for (let col = 0; col < maze[row].length; col++) {
+
                     const cell = document.createElement("div");
+
+                    /*
+                     * Walls are #
+                     * Everything else is a path
+                     */
+
                     if (maze[row][col] === "#") {
                         cell.classList.add("wall");
-                    } else {
+                    }
+                    else {
                         cell.classList.add("path");
                     }
+
+
+                    /*
+                     * Player
+                     */
+
                     if (row === playerRow && col === playerCol) {
+
                         cell.classList.add("player");
                         cell.innerHTML = "🧑‍🏫";
+
                     }
+
+
+                    /*
+                     * Exit
+                     */
+
                     if (maze[row][col] === "E") {
+
                         cell.classList.add("exit");
                         cell.innerHTML = "🚪";
+
                     }
+
+
                     mazeElement.appendChild(cell);
+
                 }
+
             }
+
         }
 
+
+        /*
+         * Move player
+         */
+
         function movePlayer(rowChange, colChange) {
+
             const newRow = playerRow + rowChange;
             const newCol = playerCol + colChange;
+
+
+            /*
+             * Prevent going outside maze
+             */
 
             if (
                 newRow < 0 ||
@@ -150,36 +285,93 @@
                 return;
             }
 
+
+            /*
+             * Prevent walking through walls
+             */
+
             if (maze[newRow][newCol] === "#") {
                 return;
             }
 
+
+            /*
+             * Move player
+             */
+
             playerRow = newRow;
             playerCol = newCol;
+
             drawMaze();
 
+
+            /*
+             * Player reached exit
+             */
+
             if (maze[playerRow][playerCol] === "E") {
+
                 document.getElementById("mazePage").style.display = "none";
+
                 document.getElementById("cluePage").style.display = "flex";
+
             }
+
         }
 
+
+        /*
+         * Keyboard controls
+         */
+
         document.addEventListener("keydown", function(event) {
-            if (event.key === "ArrowUp" || event.key.toLowerCase() === "w") {
+
+            if (
+                event.key === "ArrowUp" ||
+                event.key.toLowerCase() === "w"
+            ) {
+                event.preventDefault();
                 movePlayer(-1, 0);
             }
-            if (event.key === "ArrowDown" || event.key.toLowerCase() === "s") {
+
+
+            if (
+                event.key === "ArrowDown" ||
+                event.key.toLowerCase() === "s"
+            ) {
+                event.preventDefault();
                 movePlayer(1, 0);
             }
-            if (event.key === "ArrowLeft" || event.key.toLowerCase() === "a") {
+
+
+            if (
+                event.key === "ArrowLeft" ||
+                event.key.toLowerCase() === "a"
+            ) {
+                event.preventDefault();
                 movePlayer(0, -1);
             }
-            if (event.key === "ArrowRight" || event.key.toLowerCase() === "d") {
+
+
+            if (
+                event.key === "ArrowRight" ||
+                event.key.toLowerCase() === "d"
+            ) {
+                event.preventDefault();
                 movePlayer(0, 1);
             }
+
         });
 
+
+        /*
+         * Draw maze when page loads
+         */
+
         drawMaze();
+
     </script>
+
 </body>
 </html>
+```
